@@ -1,5 +1,5 @@
-all: pages.tsv
+all: pages.txt
 
-pages.tsv:
-	python3 build.py > pages_unsorted.tsv
-	sort -n -r pages.tsv | uniq > pages.tsv
+pages.txt:
+	python3 build.py > pages_unsorted.txt
+	sort -n -r pages_unsorted.txt | uniq > pages.txt
