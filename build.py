@@ -3,9 +3,11 @@ from urllib.parse import quote_plus, unquote_plus
 import json
 from bs4 import BeautifulSoup
 import multiprocessing
-
+import sys
 
 def parse_pop_page(pop_page):
+  sys.stderr.write("Parsing %s...\n" % pop_page)
+
   url = 'https://en.wikipedia.org/w/api.php?action=parse&page=%s&format=json&prop=text&redirects=1' % quote_plus(pop_page)
   f = urllib.request.urlopen(url)
   res = json.loads(f.read())
@@ -13,7 +15,7 @@ def parse_pop_page(pop_page):
   try:
     html = res['parse']['text']['*']
   except KeyError:
-    sys.stderr.write("No content for %s\n" % pop_page)
+    sys.stderr.write("WARNING: No content for %s\n" % pop_page)
     return
 
   soup = BeautifulSoup(html,features='html.parser')
