@@ -8,7 +8,7 @@ def get_cur_pop():
   index = 'https://en.wikipedia.org/w/api.php?action=parse&page=User:Community_Tech_bot/Popular_pages&format=json&prop=links&redirects=1'
   
   f = urllib.request.urlopen(index)
-  index = json.loads(f.read().encode('utf8'))
+  index = json.loads(f.read().decode())
   
   for link in index['parse']['links']:
     link = link['*']
