@@ -10,7 +10,11 @@ def parse_pop_page(pop_page):
   f = urllib.request.urlopen(url)
   res = json.loads(f.read())
 
-  html = res['parse']['text']['*']
+  try:
+    html = res['parse']['text']['*']
+  except KeyError:
+    sys.stderr.write("No content for %s\n" % pop_page)
+    return
 
   soup = BeautifulSoup(html,features='html.parser')
 
