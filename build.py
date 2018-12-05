@@ -1,8 +1,9 @@
 import urllib.request
 from urllib.parse import quote_plus, unquote_plus
 import json
-from time import perf_counter
 from bs4 import BeautifulSoup
+import multiprocessing
+
 
 def parse_pop_page(pop_page):
   url = 'https://en.wikipedia.org/w/api.php?action=parse&page=%s&format=json&prop=text&redirects=1' % quote_plus(pop_page)
@@ -12,8 +13,6 @@ def parse_pop_page(pop_page):
   html = res['parse']['text']['*']
 
   soup = BeautifulSoup(html,features='html.parser')
-
-  pages = ""
 
   try:
     for row in soup.find('table',class_='wikitable').find('tbody').find_all('tr'):
@@ -34,13 +33,11 @@ def parse_pop_page(pop_page):
 
       if not '&redlink=1' in href and views > 10000:
         page = unquote_plus(href[6:])
-        pages += "%d\t%s\n" % (views, page)
+        print("%d\t%s" % (views, page))
   except (AttributeError, TypeError) as e:
     print(e)
     print(link)
     exit(1)
-
-  return pages
 
 def get_cur_pop():
   index = 'https://en.wikipedia.org/w/api.php?action=parse&page=User:Community_Tech_bot/Popular_pages&format=json&prop=links&redirects=1'
@@ -50,14 +47,8 @@ def get_cur_pop():
   
   pages = [link['*'] for link in index['parse']['links'] if '/Popular pages' in link['*']]
 
-  print(pages)
+  pool = multiprocessing.Pool(processes=4)
 
-  import multiprocessing
-
-  pool = multiprocessing.Pool()
-
-  pages = pool.map(parse_pop_page, pages)
-
-  print(''.join(pages))
+  pool.map(parse_pop_page, pages)
 
 get_cur_pop()
