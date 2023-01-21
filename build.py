@@ -37,7 +37,7 @@ def parse_pop_page(pop_page):
 
       views = int(views.replace(',', ''))
 
-      if not '&redlink=1' in href and views > 10000:
+      if not '&redlink=1' in href and views > 100000:
         page = unquote_plus(href[6:])
         print("%d\t%s" % (views, page))
   except (AttributeError, TypeError) as e:
