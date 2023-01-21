@@ -53,7 +53,7 @@ def get_cur_pop():
   
   pages = [link['*'] for link in index['parse']['links'] if '/Popular pages' in link['*']]
 
-  pool = multiprocessing.Pool(processes=4)
+  pool = multiprocessing.Pool()
 
   pool.map(parse_pop_page, pages)
 
